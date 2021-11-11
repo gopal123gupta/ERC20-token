@@ -1,0 +1,63 @@
+pragma solidity ^ 0.8.0;
+
+contract token{
+    
+  string  public name = "Shiva";
+  string  public symbole = "shiv";
+  uint256 public decimal = 10;
+  uint256  totalsupply = 100000 wei;
+  
+  
+        //  event Approval(address indexed tokenowner, address indexed spender, uint256 token);
+          event Transfer(address indexed from, address indexed to, uint256 value);
+           
+    
+    mapping(address => uint256) balances;
+    mapping(address => mapping (address => uint256)) allowed;
+    
+    
+    
+    constructor(){
+        balances[msg.sender] = totalsupply;
+    }
+    
+    
+// ================================this fun. use to chek totalsupply===============================    
+   function totalsupply3() public view returns (uint256){
+         return totalsupply;
+    }
+    
+// ================================this fun. use to chek total balances===============================     
+    function balanceOf(address tokenowner) public view returns (uint256){
+        return balances[tokenowner];
+        
+    }
+// ================================this fun. use to transfer coin===============================  
+   
+    function transfer(address receiver, uint256 numtoken) public payable returns(bool){
+        require(numtoken <= balances[msg.sender]);
+        balances[msg.sender] -= numtoken;
+        balances[receiver]   += numtoken;
+        emit Transfer(msg.sender, receiver, numtoken);
+        return true;
+    }
+    
+    
+// ================================this fun. use to mint new coin===============================  
+
+    function mint(uint256 qty) public returns(uint256 totalSupply){
+        totalsupply += qty;
+        balances[msg.sender] += qty;
+        return totalSupply;
+     }
+     
+// ================================this fun. use to burn coin===============================       
+     
+        function burn(uint256 qty) public returns(uint256 totalSupply){
+        require(qty <= balances[msg.sender]);
+        totalsupply -= qty;
+        balances[msg.sender] -= qty;
+        return totalSupply;
+     }
+
+}
